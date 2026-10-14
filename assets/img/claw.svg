@@ -87,7 +87,7 @@
     <g clip-path="url(#cardClip)">
       <rect x="150" y="630" width="380" height="250" rx="14" fill="url(#card)"/>
       <polygon points="330,880 430,690 486,690 386,880" fill="#8e8e8e"/>
-      <polygon points="430,880 530,880 530,740 500,740" fill="#8e8e8e"/>
+      <polygon points="430,880 530,880 530,740 500,740" fill="#f25c1f"/>
       <rect x="150" y="630" width="380" height="1.5" fill="#ffffff" opacity=".25"/>
     </g>
     <g transform="translate(184 700)">
