@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<!-- @head title="Sign Up — Cardx" description="Open your Cardx account in minutes." -->
+</head>
+<body>
+<main id="main" class="auth">
+  <aside class="auth__aside">
+    <a class="logo" href="/" aria-label="Cardx home" style="position:relative;z-index:2"><!-- @logo --><span class="logo__word">Cardx</span></a>
+    <img src="/assets/img/claw.svg" alt="" width="640" height="980">
+    <h2 class="h2">Modern banking starts here.</h2>
+    <div class="reviews">
+      <!-- @avatars -->
+      <p class="reviews__text">Over 40K+<br>Client Reviews</p>
+    </div>
+  </aside>
+
+  <section class="auth__main">
+    <div class="auth__top">
+      <a href="/" class="link">&larr; Back to home</a>
+      <a href="/contact" class="link">Need help? <strong>Contact us</strong></a>
+    </div>
+
+    <form class="auth__form" data-validate aria-labelledby="signup-title">
+      <div style="display:grid;gap:12px">
+        <h1 class="h2" id="signup-title">Create your account</h1>
+        <p style="margin:0;color:var(--muted)">It takes less than five minutes. No hidden fees.</p>
+      </div>
+
+      <fieldset style="border:0;padding:0;margin:0;display:grid;gap:10px">
+        <legend style="font-size:14px;font-weight:500;margin-bottom:8px">Choose a plan</legend>
+        <div class="plan-picker">
+          <input type="radio" name="plan" id="p-standard" value="standard" checked><label for="p-standard"><strong>Standard</strong><span>Free</span></label>
+          <input type="radio" name="plan" id="p-metal" value="metal"><label for="p-metal"><strong>Metal</strong><span>$12 / mo</span></label>
+          <input type="radio" name="plan" id="p-business" value="business"><label for="p-business"><strong>Business</strong><span>$29 / mo</span></label>
+        </div>
+      </fieldset>
+
+      <div class="form-row">
+        <div class="field">
+          <label for="s-first">First name</label>
+          <input id="s-first" name="firstName" autocomplete="given-name" required>
+          <span class="field__error" aria-live="polite"></span>
+        </div>
+        <div class="field">
+          <label for="s-last">Last name</label>
+          <input id="s-last" name="lastName" autocomplete="family-name" required>
+          <span class="field__error" aria-live="polite"></span>
+        </div>
+      </div>
+      <div class="field">
+        <label for="s-email">Email</label>
+        <input id="s-email" name="email" type="email" autocomplete="email" required data-error="Please enter a valid email address.">
+        <span class="field__error" aria-live="polite"></span>
+      </div>
+      <div class="field">
+        <label for="s-country">Country of residence</label>
+        <select id="s-country" name="country" autocomplete="country-name" required>
+          <option value="">Select a country</option>
+          <option>United States</option>
+          <option>United Kingdom</option>
+          <option>Canada</option>
+          <option>Germany</option>
+          <option>France</option>
+          <option>Nigeria</option>
+          <option>Ghana</option>
+          <option>Kenya</option>
+          <option>South Africa</option>
+          <option>Other</option>
+        </select>
+        <span class="field__error" aria-live="polite"></span>
+      </div>
+      <div class="field">
+        <label for="s-password">Password</label>
+        <input id="s-password" name="password" type="password" autocomplete="new-password" required minlength="8" data-strength-input data-error="Use at least 8 characters.">
+        <div class="strength" data-strength data-score="0" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        <span class="field__hint">Use 8+ characters with a mix of letters, numbers and symbols.</span>
+        <span class="field__error" aria-live="polite"></span>
+      </div>
+      <div class="field">
+        <label for="s-confirm">Confirm password</label>
+        <input id="s-confirm" name="confirm" type="password" autocomplete="new-password" required data-match="#s-password">
+        <span class="field__error" aria-live="polite"></span>
+      </div>
+      <label class="checkbox"><input type="checkbox" name="terms" required> <span>I agree to the <a href="/company">Terms of Service</a> and <a href="/company">Privacy Policy</a>.</span></label>
+      <button class="btn btn--block" type="submit">Create account</button>
+      <p class="form-success" role="status" data-template="Welcome to Cardx, {name}! Check your inbox to verify your email."></p>
+    </form>
+  </section>
+</main>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "name": "cardx",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cardx — modern tools for a modern banking experience. Static marketing site.",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "dev": "node build.mjs && npx serve dist"
+  },
+  "engines": { "node": ">=18" }
+}

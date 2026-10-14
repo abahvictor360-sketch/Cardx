@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<!-- @head title="Contact Us — Cardx" description="Get in touch with the Cardx team for support, sales or press enquiries." -->
+</head>
+<body>
+<div class="page-hero">
+  <!-- @header active="contact" -->
+  <div class="container page-hero__inner">
+    <div>
+      <span class="eyebrow">Contact Us</span>
+      <h1 class="display" style="margin-top:24px">Let's talk.</h1>
+    </div>
+    <div class="page-hero__aside">
+      <p class="lead">Questions about your account, a partnership, or Cardx for your business? Our team usually replies within one business day.</p>
+    </div>
+  </div>
+</div>
+
+<main id="main">
+  <section class="section section--white">
+    <div class="container contact-grid">
+      <div class="reveal">
+        <div class="contact-list">
+          <div class="contact-item" id="support"><span>Customer support</span><a href="mailto:support@cardx.app">support@cardx.app</a></div>
+          <div class="contact-item"><span>Sales</span><a href="mailto:sales@cardx.app">sales@cardx.app</a></div>
+          <div class="contact-item"><span>Press</span><a href="mailto:press@cardx.app">press@cardx.app</a></div>
+          <div class="contact-item"><span>Phone</span><a href="tel:+18002273900">+1 (800) 227-3900</a></div>
+          <div class="contact-item"><span>Headquarters</span><strong>500 Market Street, San Francisco, CA</strong></div>
+        </div>
+      </div>
+
+      <form class="form reveal" data-validate aria-labelledby="contact-title">
+        <h2 class="h3" id="contact-title">Send us a message</h2>
+        <div class="form-row">
+          <div class="field">
+            <label for="c-name">Full name</label>
+            <input id="c-name" name="name" autocomplete="name" required>
+            <span class="field__error" aria-live="polite"></span>
+          </div>
+          <div class="field">
+            <label for="c-email">Email</label>
+            <input id="c-email" name="email" type="email" autocomplete="email" required data-error="Please enter a valid email address.">
+            <span class="field__error" aria-live="polite"></span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="c-topic">Topic</label>
+          <select id="c-topic" name="topic" required>
+            <option value="">Select a topic</option>
+            <option value="support">Account support</option>
+            <option value="sales">Sales &amp; business</option>
+            <option value="press">Press</option>
+            <option value="careers">Careers</option>
+            <option value="other">Something else</option>
+          </select>
+          <span class="field__error" aria-live="polite"></span>
+        </div>
+        <div class="field">
+          <label for="c-message">Message</label>
+          <textarea id="c-message" name="message" required minlength="10" data-error="Please write at least 10 characters."></textarea>
+          <span class="field__error" aria-live="polite"></span>
+        </div>
+        <label class="checkbox"><input type="checkbox" name="consent" required> <span>I agree to the processing of my data in line with the <a href="/company">privacy policy</a>.</span></label>
+        <div><button class="btn" type="submit">Send message</button></div>
+        <p class="form-success" role="status" data-template="Thanks, {name} — your message is on its way. We'll be in touch soon."></p>
+      </form>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">FAQ</span>
+          <h2 class="h2">Quick answers</h2>
+        </div>
+      </div>
+      <div class="grid grid--2 reveal">
+        <article class="tile"><h3 class="h3">How long does the card take to arrive?</h3><p>Metal cards ship within 3–5 business days. Your virtual card is available instantly.</p></article>
+        <article class="tile"><h3 class="h3">Are there any fees abroad?</h3><p>No. Cardx uses the real exchange rate with no foreign transaction fees on Metal and Business plans.</p></article>
+        <article class="tile"><h3 class="h3">Is my money safe?</h3><p>Funds are held with regulated partner banks and protected by bank-grade encryption and biometric approvals.</p></article>
+        <article class="tile"><h3 class="h3">Can I cancel anytime?</h3><p>Yes. Downgrade or close your account from the app at any time, with no cancellation fee.</p></article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- @footer -->
+</body>
+</html>
