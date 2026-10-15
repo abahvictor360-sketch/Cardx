@@ -2,3 +2,8 @@ dist/
 node_modules/
 .vercel/
 .DS_Store
+# /brag intermediates (regenerate with brag-output/work/render.mjs + music.py)
+brag-output/work/*
+!brag-output/work/video.html
+!brag-output/work/music.py
+!brag-output/work/render.mjs

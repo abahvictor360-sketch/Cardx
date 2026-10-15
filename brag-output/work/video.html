@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Cardx — brag</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;350;400;450;500;600&display=block" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+<style>
+  /* Frames are driven by render(t); the site's own animations and transitions must not run */
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: #000; }
+  #stage { position: relative; width: 1920px; height: 1080px; overflow: hidden; font-family: var(--font); }
+  .scene { position: absolute; inset: 0; overflow: hidden; display: none; }
+  .abs { position: absolute; }
+  .mask { display: block; overflow: hidden; padding-bottom: .12em; margin-bottom: -.12em; }
+  .mask > span { display: inline-block; will-change: transform; }
+  .word { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .12em; margin-bottom: -.12em; }
+  .word > span { display: inline-block; }
+  .chrome { background: radial-gradient(120% 90% at 70% 40%, #ececec 0%, #dcdcdc 45%, #b9b9b9 100%); }
+  .ink { background: #0b0b0b; color: #fff; }
+  .light { background: #e4e4e4; }
+  .white { background: #fff; }
+
+  .v-display { margin: 0; font-weight: 450; letter-spacing: -0.055em; line-height: 1.0; }
+  .v-logo { display: flex; align-items: center; gap: 16px; font-weight: 600; font-size: 34px; letter-spacing: -0.03em; }
+  .v-logo svg { width: 64px; height: 47px; }
+
+  /* Scene 1 */
+  #s1 .head { left: 120px; top: 250px; width: 980px; font-size: 128px; }
+  #s1 .logo { left: 120px; top: 70px; }
+  #s1 .reviews { left: 120px; top: 760px; }
+  #s1 .reviews .avatar { width: 84px; height: 84px; border-color: #dcdcdc; }
+  #s1 .reviews__text { font-size: 26px; }
+  #s1 .claw { left: 1060px; top: -40px; height: 1160px; width: auto; }
+
+  /* Scene 2 */
+  #s2 .card-wrap { left: 150px; top: 250px; width: 820px; perspective: 1600px; }
+  #s2 .bank-card { width: 820px; border-radius: 34px; box-shadow: 0 60px 120px -40px rgba(242,92,31,.35), 0 40px 80px -30px rgba(0,0,0,.9); }
+  .v-card .bank-card__brand { font-size: 34px; }
+  .v-card .bank-card__num { font-size: 28px; }
+  .v-card .bank-card__chip { border-radius: 10px; }
+  .v-stripe { position: absolute; inset: 0; background: var(--orange); clip-path: polygon(74% 100%, 100% 100%, 100% 58%); }
+  .v-sheen { position: absolute; inset: -20% -40%; background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,.22) 50%, transparent 60%); }
+  #s2 .text { left: 1060px; top: 400px; width: 820px; font-size: 92px; }
+  #s2 .text .l2 { color: var(--orange); }
+
+  /* Scene 3 */
+  #s3 .promo { left: 140px; top: 110px; width: 540px; height: 700px; min-height: 0; }
+  #s3 .promo__title { font-size: 54px; left: 44px; bottom: 44px; }
+  #s3 .promo__globe { width: 40px; height: 40px; top: 32px; right: 34px; }
+  #s3 .eyebrow { left: 800px; top: 190px; font-size: 22px; }
+  #s3 .num { left: 790px; top: 230px; font-size: 280px; font-weight: 400; letter-spacing: -0.06em; line-height: 1; }
+  #s3 .label { left: 806px; top: 520px; font-size: 52px; color: var(--muted); letter-spacing: -0.03em; }
+  #s3 .line { left: 806px; top: 610px; font-size: 60px; letter-spacing: -0.035em; font-weight: 450; }
+  #s3 .line b { color: var(--orange); font-weight: 450; }
+  #s3 .ticker { left: 0; right: 0; bottom: 0; padding: 38px 0; }
+  #s3 .ticker span { font-size: 44px; }
+  #s3 .ticker i { width: 14px; height: 14px; }
+  #s3 .ticker__track { gap: 56px; }
+
+  /* Scene 4 */
+  #s4 .eyebrow { left: 140px; top: 150px; font-size: 22px; }
+  #s4 .head { left: 140px; top: 196px; width: 860px; font-size: 96px; }
+  #s4 .panel { left: 140px; top: 470px; width: 820px; padding: 48px; gap: 30px; }
+  #s4 .panel strong { font-size: 30px; }
+  #s4 .panel .total { font-size: 24px; color: var(--muted); }
+  #s4 .bar-row { grid-template-columns: 170px 1fr 80px; font-size: 26px; gap: 24px; }
+  #s4 .bar { height: 16px; }
+  #s4 .bar > i { width: var(--w); transform-origin: left; }
+  #s4 .big { left: 1110px; top: 250px; font-size: 330px; font-weight: 400; letter-spacing: -0.065em; line-height: 1; }
+  #s4 .big b { color: var(--orange); font-weight: 400; }
+  #s4 .biglabel { left: 1124px; top: 600px; font-size: 48px; letter-spacing: -0.03em; }
+  #s4 .bigsub { left: 1124px; top: 670px; font-size: 30px; color: var(--muted); }
+
+  /* Scene 5 */
+  #s5 .head { left: 0; right: 0; top: 120px; text-align: center; font-size: 112px; }
+  #s5 .card { left: 680px; top: 520px; width: 560px; }
+  #s5 .bank-card { width: 560px; border-radius: 24px; }
+  #s5 .bank-card__brand { font-size: 24px; }
+  #s5 .bank-card__num { font-size: 20px; }
+
+  /* Scene 6 */
+  #s6 .head { left: 0; right: 0; top: 230px; text-align: center; font-size: 120px; }
+  #s6 .reviews { left: 0; right: 0; top: 470px; justify-content: center; }
+  #s6 .reviews .avatar { width: 80px; height: 80px; border-color: #0b0b0b; }
+  #s6 .reviews__text { font-size: 26px; color: #a9a9a9; }
+  #s6 .cta { left: 0; right: 0; top: 680px; display: flex; justify-content: center; align-items: center; gap: 56px; }
+  #s6 .v-logo { color: #fff; font-size: 44px; }
+  #s6 .v-logo svg { width: 76px; height: 56px; }
+  #s6 .v-logo svg path:first-child { fill: #fff; }
+  #s6 .btn { position: relative; overflow: hidden; min-height: 96px; padding: 0 72px; font-size: 34px; }
+  #s6 .url { font-size: 32px; color: #a9a9a9; letter-spacing: -0.01em; }
+  #s6 .ripple { position: absolute; left: 50%; top: 50%; width: 40px; height: 40px; margin: -20px 0 0 -20px; border-radius: 50%; background: rgba(255,255,255,.45); }
+  #cursor { position: absolute; left: 0; top: 0; width: 46px; height: 56px; z-index: 50; filter: drop-shadow(0 6px 10px rgba(0,0,0,.5)); }
+
+  .wipe { position: absolute; top: -10%; bottom: -10%; left: -15%; width: 130%; background: var(--orange); z-index: 40; transform: translateX(-120%) skewX(-12deg); }
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <!-- 1 · Hook -->
+  <section class="scene chrome" id="s1">
+    <div class="abs logo v-logo"><svg viewBox="0 0 46 34"><path d="M0 34 L17 0 H28 L11 34 Z" fill="#0b0b0b"/><path d="M24 34 H46 V12 Z" fill="#f25c1f"/></svg>Cardx</div>
+    <h1 class="abs head v-display"></h1>
+    <div class="abs reviews">
+      <div class="avatars">
+        <span class="avatar"><img src="assets/img/people/avatar-1.jpg" alt=""></span>
+        <span class="avatar"><img src="assets/img/people/avatar-2.jpg" alt=""></span>
+        <span class="avatar"><img src="assets/img/people/avatar-3.jpg" alt=""></span>
+      </div>
+      <p class="reviews__text">Over 40K+<br>Client Reviews</p>
+    </div>
+    <img class="abs claw" src="assets/img/claw-static.svg" alt="">
+  </section>
+
+  <!-- 2 · Reveal -->
+  <section class="scene ink" id="s2">
+    <div class="abs card-wrap">
+      <div class="bank-card v-card">
+        <span class="v-stripe"></span>
+        <span class="bank-card__brand">Cardx</span><span class="bank-card__chip"></span><span class="bank-card__num">•••• •••• •••• 4821</span>
+        <span class="v-sheen"></span>
+      </div>
+    </div>
+    <div class="abs text v-display">
+      <span class="mask"><span class="l1">One card.</span></span>
+      <span class="mask"><span class="l2">Every tool you need.</span></span>
+    </div>
+  </section>
+
+  <!-- 3 · Anywhere -->
+  <section class="scene light" id="s3">
+    <article class="abs promo">
+      <img class="promo__photo" src="assets/img/people/promo.jpg" alt="">
+      <span class="promo__shade"></span>
+      <svg class="promo__globe" viewBox="0 0 24 24" fill="#fff"><circle cx="12" cy="12" r="11"/><path d="M1.5 12h21M12 1.5c3 3 4.4 6.6 4.4 10.5S15 19.5 12 22.5C9 19.5 7.6 15.9 7.6 12S9 4.5 12 1.5z" fill="none" stroke="#f25c1f" stroke-width="1.6"/></svg>
+      <h2 class="promo__title">Use it anywhere<br>in the world</h2>
+    </article>
+    <span class="abs eyebrow">Global by default</span>
+    <div class="abs num">0+</div>
+    <div class="abs label">currencies</div>
+    <div class="abs line">Zero foreign transaction fees<b>.</b></div>
+    <div class="abs ticker"><div class="ticker__track"></div></div>
+  </section>
+
+  <!-- 4 · Budget -->
+  <section class="scene white" id="s4">
+    <span class="abs eyebrow">Smart Budgeting</span>
+    <h2 class="abs head v-display"><span class="mask"><span>See where every</span></span><span class="mask"><span>dollar goes.</span></span></h2>
+    <div class="abs panel">
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><strong style="font-weight:500">October budget</strong><span class="total">$2,340 / $3,000</span></div>
+      <div class="bar-row"><span>Groceries</span><div class="bar"><i style="--w:72%"></i></div><span>72%</span></div>
+      <div class="bar-row"><span>Dining</span><div class="bar"><i class="accent" style="--w:91%"></i></div><span>91%</span></div>
+      <div class="bar-row"><span>Transport</span><div class="bar"><i style="--w:38%"></i></div><span>38%</span></div>
+      <div class="bar-row"><span>Shopping</span><div class="bar"><i style="--w:54%"></i></div><span>54%</span></div>
+    </div>
+    <div class="abs big">0<b>%</b></div>
+    <div class="abs biglabel">Average spending reduction</div>
+    <div class="abs bigsub">Smart budgeting · Real-time insights</div>
+  </section>
+
+  <!-- 5 · Cards -->
+  <section class="scene chrome" id="s5">
+    <h2 class="abs head v-display"></h2>
+    <div class="abs card" data-i="0"><div class="bank-card bank-card--graphite"><span class="bank-card__brand">Cardx Business</span><span class="bank-card__chip"></span><span class="bank-card__num">•••• 7710</span></div></div>
+    <div class="abs card" data-i="2"><div class="bank-card bank-card--silver"><span class="bank-card__brand">Cardx Virtual</span><span class="bank-card__chip"></span><span class="bank-card__num">•••• 0193</span></div></div>
+    <div class="abs card" data-i="1"><div class="bank-card"><span class="v-stripe"></span><span class="bank-card__brand">Cardx Metal</span><span class="bank-card__chip"></span><span class="bank-card__num">•••• 4821</span></div></div>
+  </section>
+
+  <!-- 6 · Outro -->
+  <section class="scene ink" id="s6">
+    <h2 class="abs head v-display"></h2>
+    <div class="abs reviews">
+      <div class="avatars">
+        <span class="avatar"><img src="assets/img/people/avatar-1.jpg" alt=""></span>
+        <span class="avatar"><img src="assets/img/people/avatar-2.jpg" alt=""></span>
+        <span class="avatar"><img src="assets/img/people/avatar-3.jpg" alt=""></span>
+        <span class="avatar"><img src="assets/img/people/avatar-4.jpg" alt=""></span>
+      </div>
+      <p class="reviews__text">Over 40K+<br>Client Reviews</p>
+    </div>
+    <div class="abs cta">
+      <div class="v-logo"><svg viewBox="0 0 46 34"><path d="M0 34 L17 0 H28 L11 34 Z"/><path d="M24 34 H46 V12 Z" fill="#f25c1f"/></svg>Cardx</div>
+      <span class="btn">Sign Up<span class="ripple"></span></span>
+      <span class="url">cardx-chi.vercel.app</span>
+    </div>
+    <svg id="cursor" viewBox="0 0 23 28"><path d="M1 1 L1 22 L6.5 17 L10 26 L14 24.3 L10.5 15.6 L18 15.6 Z" fill="#fff" stroke="#0b0b0b" stroke-width="1.6" stroke-linejoin="round"/></svg>
+  </section>
+
+  <div class="wipe" id="w1"></div>
+  <div class="wipe" id="w2"></div>
+</div>
+
+<script>
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const prog = (t, a, b) => clamp((t - a) / (b - a));
+const lerp = (a, b, k) => a + (b - a) * k;
+const E = {
+  outCubic: k => 1 - Math.pow(1 - k, 3),
+  inCubic: k => k * k * k,
+  inOutCubic: k => k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2,
+  outExpo: k => k === 1 ? 1 : 1 - Math.pow(2, -10 * k),
+  outBack: (k, s = 1.4) => 1 + (s + 1) * Math.pow(k - 1, 3) + s * Math.pow(k - 1, 2),
+};
+const tw = (t, a, b, from, to, ease = E.outCubic) => lerp(from, to, ease(prog(t, a, b)));
+
+function words(el, text) {
+  el.innerHTML = text.split(" ").map(w => `<span class="word"><span>${w}</span></span>`).join(" ");
+  return $$(".word > span", el);
+}
+const S = { s1: [0, 3.0], s2: [3.0, 6.5], s3: [6.5, 10.0], s4: [10.0, 13.5], s5: [13.5, 16.5], s6: [16.5, 99] };
+
+// Build text and ticker
+const s1Words = words($("#s1 .head"), "Modern Tools for Modern Banking Experience");
+const s5Words = words($("#s5 .head"), "Heavy metal. Zero fees abroad.");
+const s6Words = words($("#s6 .head"), "Your money, finally under control.");
+const tick = ["150+ currencies", "Zero FX fees", "Instant virtual cards", "Smart budgeting", "Metal card", "Real-time insights", "Global payouts", "Bank-grade security"];
+$("#s3 .ticker__track").innerHTML = (tick.map(t => `<span>${t}</span><i></i>`).join("")).repeat(3);
+
+function tf(el, { x = 0, y = 0, s = 1, r = 0, o = 1, extra = "" } = {}) {
+  el.style.transform = `translate3d(${x}px,${y}px,0) scale(${s}) rotate(${r}deg) ${extra}`;
+  el.style.opacity = o;
+}
+function maskIn(spans, t, start, step, dur = .55) {
+  spans.forEach((sp, i) => { sp.style.transform = `translateY(${tw(t, start + i * step, start + i * step + dur, 112, 0)}%)`; });
+}
+function maskOut(spans, t, start, step, dur = .28) {
+  spans.forEach((sp, i) => {
+    const k = prog(t, start + i * step, start + i * step + dur);
+    if (k > 0) sp.style.transform = `translateY(${lerp(0, -112, E.inCubic(k))}%)`;
+  });
+}
+
+window.render = function (t) {
+  for (const id in S) $("#" + id).style.display = (t >= S[id][0] && t < S[id][1]) ? "block" : "none";
+
+  // Camera shake on the clamp hit
+  const shake = t > 1.0 && t < 1.35 ? 4 * Math.sin((t - 1) * 95) * (1 - prog(t, 1.0, 1.35)) : 0;
+  $("#stage").style.transform = `translate(${shake}px, ${shake * .6}px)`;
+
+  // Scene 1 — the claw drops onto the beat
+  if (t < S.s1[1]) {
+    const sc = $("#s1");
+    const drop = t < 0.2 ? -1250 : lerp(-1250, 0, E.outBack(prog(t, 0.2, 1.0), 1.15));
+    const bob = t > 1.0 ? 8 * Math.sin((t - 1.0) * Math.PI * 2 / 3) * prog(t, 1.0, 1.6) : 0;
+    const up = tw(t, 2.72, 3.08, 0, -1350, E.inCubic);
+    tf($(".claw", sc), { y: drop + bob + up });
+    tf($(".logo", sc), { y: tw(t, .15, .6, -20, 0), o: tw(t, .15, .6, 0, 1) * (1 - prog(t, 2.7, 2.9)) });
+    maskIn(s1Words, t, 0.45, 0.11);
+    maskOut(s1Words, t, 2.66, 0.03);
+    tf($(".reviews", sc), { y: tw(t, 1.2, 1.7, 40, 0) + tw(t, 2.66, 2.9, 0, -30, E.inCubic), o: tw(t, 1.2, 1.7, 0, 1) * (1 - prog(t, 2.66, 2.88)) });
+    sc.style.transform = `scale(${lerp(1, 1.03, prog(t, 0, 3))})`;
+  }
+
+  // Wipe 1 (2.82 → 3.18)
+  const w1 = $("#w1");
+  w1.style.transform = t < 3.0
+    ? `translateX(${tw(t, 2.8, 3.0, -120, 0, E.inCubic)}%) skewX(-12deg)`
+    : `translateX(${tw(t, 3.0, 3.22, 0, 120, E.outCubic)}%) skewX(-12deg)`;
+
+  // Scene 2 — the card
+  if (t >= S.s2[0] && t < S.s2[1]) {
+    const sc = $("#s2");
+    const wrap = $(".card-wrap", sc), card = $(".bank-card", sc);
+    const y = tw(t, 3.0, 3.8, 520, 0, E.outExpo) + tw(t, 6.22, 6.52, 0, 80, E.inCubic);
+    const ry = tw(t, 3.0, 6.5, -38, -10), rx = tw(t, 3.0, 6.5, 22, 6), rz = tw(t, 3.0, 6.5, -10, -4);
+    wrap.style.transform = `translateY(${y}px)`;
+    wrap.style.opacity = 1 - prog(t, 6.25, 6.5);
+    card.style.transform = `rotateY(${ry}deg) rotateX(${rx}deg) rotateZ(${rz}deg)`;
+    $(".v-sheen", sc).style.transform = `translateX(${tw(t, 3.75, 4.6, -70, 70, E.inOutCubic)}%)`;
+    const lines = [$(".l1", sc), $(".l2", sc)];
+    maskIn(lines, t, 3.35, 0.28, .6);
+    maskOut(lines, t, 6.12, 0.08);
+  }
+
+  // Scene 3 — anywhere
+  if (t >= S.s3[0] && t < S.s3[1]) {
+    const sc = $("#s3");
+    const promo = $(".promo", sc);
+    const k = E.inOutCubic(prog(t, 6.55, 7.2));
+    promo.style.clipPath = `inset(${(1 - k) * 100}% 0 0 0)`;
+    tf(promo, { y: tw(t, 6.55, 7.2, 70, 0) + tw(t, 9.72, 10.0, 0, -50, E.inCubic), o: 1 - prog(t, 9.75, 10.0) });
+    const n = Math.round(tw(t, 6.75, 7.75, 0, 150, E.outCubic));
+    $(".num", sc).textContent = n + "+";
+    const out = (a) => ({ y: tw(t, 9.62 + a, 9.9 + a, 0, -50, E.inCubic), o: 1 - prog(t, 9.62 + a, 9.9 + a) });
+    const inn = (a, b) => ({ y: tw(t, a, b, 50, 0), o: tw(t, a, b, 0, 1) });
+    const mix = (i, o) => ({ y: i.y + o.y, o: i.o * o.o });
+    tf($(".eyebrow", sc), mix(inn(6.7, 7.1), out(0)));
+    tf($(".num", sc), mix(inn(6.72, 7.15), out(.02)));
+    tf($(".label", sc), mix(inn(6.95, 7.35), out(.04)));
+    tf($(".line", sc), mix(inn(7.15, 7.6), out(.06)));
+    tf($(".ticker", sc), { y: tw(t, 6.6, 7.05, 160, 0, E.outExpo) + tw(t, 9.7, 10.0, 0, 160, E.inCubic) });
+    $(".ticker__track", sc).style.transform = `translateX(${-(t - 6.5) * 260}px)`;
+  }
+
+  // Scene 4 — budget
+  if (t >= S.s4[0] && t < S.s4[1]) {
+    const sc = $("#s4");
+    const out = (a) => ({ y: tw(t, 13.18 + a, 13.45 + a, 0, -50, E.inCubic), o: 1 - prog(t, 13.18 + a, 13.45 + a) });
+    const inn = (a, b) => ({ y: tw(t, a, b, 50, 0), o: tw(t, a, b, 0, 1) });
+    const mix = (i, o) => ({ y: i.y + o.y, o: i.o * o.o });
+    tf($(".eyebrow", sc), mix(inn(10.05, 10.4), out(0)));
+    const heads = $$(".head .mask > span", sc);
+    maskIn(heads, t, 10.12, 0.16, .55);
+    maskOut(heads, t, 13.15, 0.05);
+    tf($(".panel", sc), mix(inn(10.25, 10.75), out(.04)));
+    $$(".bar > i", sc).forEach((bar, i) => { bar.style.transform = `scaleX(${tw(t, 10.5 + i * .12, 11.15 + i * .12, 0, 1, E.outExpo)})`; });
+    const pct = Math.round(tw(t, 10.6, 11.6, 0, 32, E.outCubic));
+    $(".big", sc).innerHTML = pct + "<b>%</b>";
+    tf($(".big", sc), mix(inn(10.5, 10.9), out(.06)));
+    tf($(".biglabel", sc), mix(inn(10.9, 11.3), out(.08)));
+    tf($(".bigsub", sc), mix(inn(11.05, 11.45), out(.1)));
+  }
+
+  // Scene 5 — the card trio fans out on the beat
+  if (t >= S.s5[0] && t < S.s5[1]) {
+    const sc = $("#s5");
+    maskIn(s5Words, t, 13.6, 0.09, .5);
+    const fan = E.outBack(prog(t, 14.0, 14.5), 1.5);
+    const rise = tw(t, 13.5, 13.95, 720, 0, E.outExpo);
+    const float = Math.sin((t - 14.5) * 2.2) * 6 * prog(t, 14.5, 15.0);
+    $$(".card", sc).forEach(c => {
+      const i = +c.dataset.i; // 0 left, 1 centre, 2 right
+      const dir = i - 1;
+      tf(c, { x: dir * 560 * fan, y: rise + Math.abs(dir) * 46 * fan + float * (dir === 0 ? 1 : -.6), r: dir * 14 * fan, s: dir === 0 ? lerp(1, 1.08, fan) : 1 });
+    });
+    sc.style.transform = `scale(${lerp(1, 1.025, prog(t, 13.5, 16.5))})`;
+  }
+
+  // Wipe 2 (16.32 → 16.7), opposite direction
+  const w2 = $("#w2");
+  w2.style.transform = t < 16.5
+    ? `translateX(${tw(t, 16.3, 16.5, 120, 0, E.inCubic)}%) skewX(-12deg)`
+    : `translateX(${tw(t, 16.5, 16.72, 0, -120, E.outCubic)}%) skewX(-12deg)`;
+
+  // Scene 6 — outro and the click
+  if (t >= S.s6[0]) {
+    const sc = $("#s6");
+    maskIn(s6Words, t, 16.62, 0.1, .55);
+    tf($(".reviews", sc), { y: tw(t, 17.2, 17.65, 40, 0), o: tw(t, 17.2, 17.65, 0, 1) });
+    tf($(".cta", sc), { y: tw(t, 17.55, 18.05, 50, 0), o: tw(t, 17.55, 18.05, 0, 1) });
+    const btn = $(".btn", sc);
+    const press = t < 18.7 ? tw(t, 18.62, 18.7, 1, .94) : tw(t, 18.7, 18.95, .94, 1, E.outBack);
+    btn.style.transform = `scale(${press})`;
+    btn.style.background = t >= 18.7 && t < 18.9 ? "var(--orange-deep)" : "";
+    const rk = prog(t, 18.7, 19.35);
+    const rip = $(".ripple", sc);
+    rip.style.transform = `scale(${rk * 14})`;
+    rip.style.opacity = rk > 0 ? (1 - rk) * .9 : 0;
+    // Cursor glides to the button centre
+    const r = btn.getBoundingClientRect();
+    const tx = r.left + r.width * .58, ty = r.top + r.height * .55;
+    const mk = E.inOutCubic(prog(t, 18.0, 18.6));
+    const cur = $("#cursor");
+    cur.style.transform = `translate(${lerp(1640, tx, mk)}px, ${lerp(1120, ty, mk)}px) scale(${t >= 18.62 && t < 18.8 ? .88 : 1})`;
+    cur.style.opacity = prog(t, 17.95, 18.1);
+  }
+};
+
+window.ready = (async () => {
+  await document.fonts.ready;
+  await Promise.all($$("img").map(img => img.complete ? 0 : new Promise(r => { img.onload = img.onerror = r; })));
+  await Promise.all($$("img").map(img => img.decode().catch(() => {})));
+  window.render(0);
+  return true;
+})();
+</script>
+</body>
+</html>
